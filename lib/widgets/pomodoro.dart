@@ -48,25 +48,30 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     final timer = context.watch<TimerCubit>().state;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        Text(timer!.working ? "Temps de travail :" : "Temps de pause :"),
         Container(
           margin: const EdgeInsets.symmetric(vertical: 20),
           height: 200,
           width: 200,
-          decoration: const BoxDecoration(
+          decoration: timer.working ? const BoxDecoration(
             shape: BoxShape.circle,
                 color: Colors.cyan
+          ) : const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.green
           ),
           child: Stack(
             fit: StackFit.expand,
             alignment: Alignment.center,
             children: <Widget>[
               CircularProgressIndicator(
-                value: timer!.timeLeft.inMilliseconds / timer.duration.inMilliseconds,
+                value: timer.nextStepIn.inMilliseconds / timer.durationOfCurrentStep.inMilliseconds,
               ),
               Center(
                 child: Text(
-                  formatTime(timer.timeLeft),
+                  formatTime(timer.nextStepIn),
                   style: const TextStyle(fontSize: 48, color: Colors.white),
                 ),
               )

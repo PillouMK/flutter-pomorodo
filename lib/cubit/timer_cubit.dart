@@ -12,4 +12,12 @@ class TimerCubit extends Cubit<TimerState?> {
     emit(TimerState.start(workMinutes: workMinutes, restMinutes: restMinutes));
   }
 
+  void setPause() {
+    emit(state?.paused());
+  }
+
+  void setResume() {
+    emit(state?.resumed());
+  }
+
 }

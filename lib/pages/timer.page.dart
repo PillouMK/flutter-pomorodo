@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pomodoro/widgets/pomodoro.dart';
 
 import '../cubit/timer_cubit.dart';
@@ -20,24 +21,54 @@ class _TimerPageState extends State<TimerPage> {
     TimerCubit.instance.state!.resumed();
   }
 
+  void pauseTimer() {
+    if(TimerCubit.instance.state!.pausedAt != null) {
+      TimerCubit.instance.setResume();
+    } else {
+      TimerCubit.instance.setPause();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final timer = context.watch<TimerCubit>().state!;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text('Pomodoro Timer Page'),
-    ), body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const PomodoroTimer(),
-        const SizedBox(
-          width: 20,
-        ),
-        ElevatedButton(
-          onPressed: resetTimer,
-          child: const Text('Reset Timer'),
-        ),
-      ],
+    ), body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const PomodoroTimer(),
+          const SizedBox(
+            width: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: pauseTimer,
+                child: Icon(
+                  timer.isRunning ? Icons.pause : Icons.play_arrow,
+                  color: Colors.pink,
+                  size: 24.0,
+                ),
+              ),
+              const SizedBox(width: 20,),
+              ElevatedButton(
+                onPressed: resetTimer,
+                child: const Icon(
+                  Icons.stop,
+                  color: Colors.pink,
+                  size: 24.0,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     ));
   }
 }

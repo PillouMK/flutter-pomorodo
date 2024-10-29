@@ -55,7 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             ElevatedButton(onPressed: () => {
               setTimerCubit(45, 15),
-              print("coucou"),
               Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const TimerPage()),
@@ -69,12 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             }, child: const Text("25/5")),
             ElevatedButton(onPressed: () => {
-              setTimerCubit(1, 1),
+              setTimerCubit(2, 1),
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const TimerPage()),
               )
-            }, child: const Text("1/1"))
+            }, child: const Text("2/1"))
           ],
         )
       ),// This trailing comma makes auto-formatting nicer for build methods.
