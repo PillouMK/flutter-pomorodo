@@ -1,10 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pomodoro/pages/timer.page.dart';
 
+import 'authentification/auth_service.dart';
 import 'cubit/timer_cubit.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
   runApp(const MyApp());
 }
 
@@ -37,6 +43,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final AuthService _authService = AuthService();
 
   void setTimerCubit(int workMinutes, int restMinutes) {
     TimerCubit.instance.setTimerCubit(workMinutes: workMinutes, restMinutes: restMinutes);
@@ -73,7 +80,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 context,
                 MaterialPageRoute(builder: (context) => const TimerPage()),
               )
-            }, child: const Text("2/1"))
+            }, child: const Text("2/1")),
+            ElevatedButton(
+              onPressed: () async {
+                User? user = await _authService.signInWithGoogle();
+                if (user != null) {
+                  // Si la connexion réussit, vous pouvez naviguer vers une nouvelle page
+                  print("user logged");
+                } else {
+                  print("fail during login");
+                }
+              },
+              child: Text('Se connecter avec Google'),
+            )
           ],
         )
       ),// This trailing comma makes auto-formatting nicer for build methods.

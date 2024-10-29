@@ -1,0 +1,104 @@
+{
+  "project_info": {
+    "project_number": "535627715101",
+    "project_id": "pomodoro-b88d5",
+    "storage_bucket": "pomodoro-b88d5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535627715101:android:9822512f5a84a3016aecf4",
+        "android_client_info": {
+          "package_name": "com.anonymous.reactnativepomodoro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535627715101-k39q7q3m4ttn09po45nefpaptdg56dkj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anonymous.reactnativepomodoro",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "535627715101-palls9jakspdvrq6o5mlm0ur6ap473bn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXFmoG5eb4L_DznC6iwuFIzvxkdHG4LRc"
+        },
+        {
+          "current_key": "AIzaSyDdRhSnrU2UUfXQWDFc7zu7wKeh6NANs9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535627715101-palls9jakspdvrq6o5mlm0ur6ap473bn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "535627715101-00u8k2b73p5fknenafgg2uvhnuo8ak78.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterPomodoro"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535627715101:android:813a13d2bf5f65a06aecf4",
+        "android_client_info": {
+          "package_name": "com.example.flutter_pomodoro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535627715101-4deunun87vh32caqmke3kc1c7einifik.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_pomodoro",
+            "certificate_hash": "c1f2e6a0325aedb67c6c4c4cf50f0d81e79bf988"
+          }
+        },
+        {
+          "client_id": "535627715101-palls9jakspdvrq6o5mlm0ur6ap473bn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXFmoG5eb4L_DznC6iwuFIzvxkdHG4LRc"
+        },
+        {
+          "current_key": "AIzaSyDdRhSnrU2UUfXQWDFc7zu7wKeh6NANs9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535627715101-palls9jakspdvrq6o5mlm0ur6ap473bn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "535627715101-00u8k2b73p5fknenafgg2uvhnuo8ak78.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterPomodoro"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
