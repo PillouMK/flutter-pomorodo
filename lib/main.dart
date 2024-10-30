@@ -4,7 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_pomodoro/pages/archives_list.dart';
 import 'package:flutter_pomodoro/pages/timer.page.dart';
+import 'package:flutter_pomodoro/pages/timer_list.dart';
+import 'package:flutter_pomodoro/repository/sessions_repository.dart';
 
 import 'authentification/auth_service.dart';
 import 'cubit/timer_cubit.dart';
@@ -45,31 +48,62 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _selectedIndex = 0;
   final AuthService _authService = AuthService();
+  User? _user;
 
-  void setTimerCubit(int workMinutes, int restMinutes) {
-    TimerCubit.instance.setTimerCubit(workMinutes: workMinutes, restMinutes: restMinutes);
+  final List<Widget> _pages = [
+    const TimerList(),
+    const ArchivesList(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
-  Future<List<Map<String, dynamic>>> fetchAllSessions() async {
-    try {
-      // Récupère la collection "session" depuis Firestore
-      CollectionReference sessions = FirebaseFirestore.instance.collection('sessions');
+  void _checkUser() {
+    setState(() {
+      _user = FirebaseAuth.instance.currentUser;
+    });
+  }
 
-      // Récupère les documents de la collection
-      QuerySnapshot querySnapshot = await sessions.get();
+  Future<void> _signInWithGoogle() async {
+    User? user = await _authService.signInWithGoogle();
+    if (user != null) {
+      _checkUser();
+    }
+  }
 
-      // Transforme les documents en une liste de maps
-      List<Map<String, dynamic>> sessionsData = querySnapshot.docs.map((doc) {
-        return doc.data() as Map<String, dynamic>;
-      }).toList();
-      print('cc');
-      print(sessionsData);
+  Future<void> _signOut() async {
+    bool? confirm = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirmation"),
+          content: const Text("Voulez-vous vraiment vous déconnecter ?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text("Annuler"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text("Déconnexion"),
+            ),
+          ],
+        );
+      },
+    );
 
-      return sessionsData;
-    } catch (e) {
-      print("Erreur lors de la récupération des sessions : $e");
-      return [];
+    if (confirm == true) {
+      await _authService.signOut();
+      _checkUser();
     }
   }
 
@@ -80,66 +114,28 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: Icon(_user == null ? Icons.login : Icons.logout),
+            onPressed: _user == null ? _signInWithGoogle : _signOut,
+          ),
+        ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            ElevatedButton(onPressed: () => {
-              setTimerCubit(45, 15),
-              Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const TimerPage()),
-              )
-            }, child: const Text("45/15")),
-            ElevatedButton(onPressed: () => {
-              setTimerCubit(25, 5),
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const TimerPage()),
-              )
-            }, child: const Text("25/5")),
-            ElevatedButton(onPressed: () => {
-              setTimerCubit(2, 1),
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const TimerPage()),
-              )
-            }, child: const Text("2/1")),
-            ElevatedButton(
-              onPressed: () async {
-                User? user = await _authService.signInWithGoogle();
-                if (user != null) {
-                  // Si la connexion réussit, vous pouvez naviguer vers une nouvelle page
-                  print("user logged");
-                  print(user.uid);
-                } else {
-                  print("fail during login");
-                }
-              },
-              child: Text('Se connecter avec Google'),
-            ),
-            FutureBuilder<List<Map<String, dynamic>>>(
-              future: fetchAllSessions(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Erreur : ${snapshot.error}'));
-                }
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('Aucune session trouvée.'));
-                }
-
-                // Affiche la liste des sessions
-                List<Map<String, dynamic>> sessions = snapshot.data!;
-                return Container(
-                  child: Text('data'),
-                );
-              },
-            )
-          ],
-        )
+      body: _pages[_selectedIndex], // Affiche la page en fonction de l'index sélectionné
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.timer), // Icône pour la page TimerList
+            label: 'Timers',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.archive), // Icône pour la page ArchiveList
+            label: 'Archives',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
       ),// This trailing comma makes auto-formatting nicer for build methods.
     );
   }
