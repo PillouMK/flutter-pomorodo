@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pomodoro/pages/timer.page.dart';
@@ -49,6 +51,28 @@ class _MyHomePageState extends State<MyHomePage> {
     TimerCubit.instance.setTimerCubit(workMinutes: workMinutes, restMinutes: restMinutes);
   }
 
+  Future<List<Map<String, dynamic>>> fetchAllSessions() async {
+    try {
+      // Récupère la collection "session" depuis Firestore
+      CollectionReference sessions = FirebaseFirestore.instance.collection('sessions');
+
+      // Récupère les documents de la collection
+      QuerySnapshot querySnapshot = await sessions.get();
+
+      // Transforme les documents en une liste de maps
+      List<Map<String, dynamic>> sessionsData = querySnapshot.docs.map((doc) {
+        return doc.data() as Map<String, dynamic>;
+      }).toList();
+      print('cc');
+      print(sessionsData);
+
+      return sessionsData;
+    } catch (e) {
+      print("Erreur lors de la récupération des sessions : $e");
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -87,11 +111,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (user != null) {
                   // Si la connexion réussit, vous pouvez naviguer vers une nouvelle page
                   print("user logged");
+                  print(user.uid);
                 } else {
                   print("fail during login");
                 }
               },
               child: Text('Se connecter avec Google'),
+            ),
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchAllSessions(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Erreur : ${snapshot.error}'));
+                }
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('Aucune session trouvée.'));
+                }
+
+                // Affiche la liste des sessions
+                List<Map<String, dynamic>> sessions = snapshot.data!;
+                return Container(
+                  child: Text('data'),
+                );
+              },
             )
           ],
         )

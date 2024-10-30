@@ -48,6 +48,8 @@ class TimerState {
       ? DateTime.now().difference(startedAt)
       : pausedAt!.difference(startedAt);
 
+
+
   bool get isRunning => pausedAt == null;
 
   bool get working {
