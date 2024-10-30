@@ -15,8 +15,12 @@ class TimerPage extends StatefulWidget {
 class _TimerPageState extends State<TimerPage> {
 
 
+  // void resetTimer() {
+  //   TimerCubit.instance.state!.resumed();
+  // }
+
   void resetTimer() {
-    TimerCubit.instance.state!.resumed();
+    TimerCubit.instance.setStop();
   }
 
   void pauseTimer() {
