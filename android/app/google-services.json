@@ -69,6 +69,14 @@
           }
         },
         {
+          "client_id": "535627715101-moflp49fqk0klckojujftfuf6fdsg9g9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_pomodoro",
+            "certificate_hash": "7c084b87852e4271e7b65bc88fe3be9d5e7d3e49"
+          }
+        },
+        {
           "client_id": "535627715101-palls9jakspdvrq6o5mlm0ur6ap473bn.apps.googleusercontent.com",
           "client_type": 3
         }
