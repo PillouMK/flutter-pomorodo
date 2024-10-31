@@ -24,18 +24,18 @@ class TimerCubit extends Cubit<TimerState?> {
     emit(state?.resumed());
     if (state != null) {
       TimerState currentState = state!;
-      int nextStepIn = state!.nextStepIn.inSeconds;
+      int nextStepIn = state!.nextStepIn.inMinutes;
       for (var i = 0; i < 30; i++) {
-        tz.TZDateTime scheduledTimeBreak = tz.TZDateTime.now(tz.local).add(Duration(seconds: currentState.working
-                ? nextStepIn + Duration(seconds: currentState.restMinutes).inSeconds
+        tz.TZDateTime scheduledTimeBreak = tz.TZDateTime.now(tz.local).add(Duration(minutes: currentState.working
+                ? nextStepIn + Duration(seconds: currentState.restMinutes).inMinutes
                 : nextStepIn));
 
         scheduleNotification(i,"Pomodoro Timer",
           "Session de travail terminée ! C'est l'heure de la pause.",
           scheduledTimeBreak);
 
-        tz.TZDateTime scheduledTimeWork = tz.TZDateTime.now(tz.local).add(Duration(seconds: currentState.working
-                ? nextStepIn + Duration(seconds: currentState.workMinutes).inSeconds
+        tz.TZDateTime scheduledTimeWork = tz.TZDateTime.now(tz.local).add(Duration(minutes: currentState.working
+                ? nextStepIn + Duration(minutes: currentState.workMinutes).inMinutes
                 : nextStepIn));
 
         scheduleNotification(i+1,"Pomodoro Timer",
