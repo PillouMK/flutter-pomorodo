@@ -16,7 +16,7 @@ class _TimerPageState extends State<TimerPage> {
 
 
   void resetTimer() {
-    TimerCubit.instance.state!.resumed();
+    TimerCubit.instance.state!.start();
   }
 
   void pauseTimer() {
