@@ -13,6 +13,8 @@ class SessionRepository {
       QuerySnapshot querySnapshot = await sessions.where('userUUID', isEqualTo: userID).get();
 
       return querySnapshot.docs.map((doc) {
+        print('doc.data()');
+        print(doc.data());
         return doc.data() as Map<String, dynamic>;
       }).toList();
     } catch (e) {
