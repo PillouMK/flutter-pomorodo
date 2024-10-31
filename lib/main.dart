@@ -140,8 +140,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         actions: [
           IconButton(
-            icon: Icon(_user == null ? Icons.login : Icons.logout),
-            onPressed: _user == null ? _signInWithGoogle : _signOut,
+            icon: Icon(FirebaseAuth.instance.currentUser?.uid == null ? Icons.login : Icons.logout),
+            onPressed: FirebaseAuth.instance.currentUser?.uid == null ? _signInWithGoogle : _signOut,
           ),
         ],
       ),

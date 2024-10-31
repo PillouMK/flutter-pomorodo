@@ -73,13 +73,13 @@ class _TimerPageState extends State<TimerPage> {
 
   Future<void> scheduleNotification(int id, String title, String body, tz.TZDateTime scheduledTime) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      id, // ID de notification (à incrémenter si plusieurs notifs en parallèle)
+      id,
       title,
       body,
       scheduledTime,
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'pomodoro-timer', // Assure-toi que l'ID du channel est bien défini
+          'pomodoro-timer',
           'Pomodoro Timer',
           importance: Importance.max,
           priority: Priority.high,
