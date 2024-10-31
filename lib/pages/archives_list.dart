@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../authentification/auth_service.dart';
 import '../repository/sessions_repository.dart';
 
@@ -21,6 +23,11 @@ class _ArchivesListState extends State<ArchivesList> {
     _checkUser();
   }
 
+  String formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return DateFormat('dd MMMM yyyy à HH:mm').format(dateTime);
+  }
+
   void _checkUser() {
     setState(() {
       _user = FirebaseAuth.instance.currentUser;
@@ -38,10 +45,10 @@ class _ArchivesListState extends State<ArchivesList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Archives'),
+        title: const Text('Historique des sessions'),
       ),
       body: StreamBuilder<User?>(
-        stream: _authService.user, // Écoute le stream d'authentification
+        stream: _authService.user,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -50,7 +57,6 @@ class _ArchivesListState extends State<ArchivesList> {
             return Center(child: Text('Erreur : ${snapshot.error}'));
           }
 
-          // Vérifiez si l'utilisateur est connecté
           User? user = snapshot.data;
           if (user == null) {
             return const Center(
@@ -68,7 +74,6 @@ class _ArchivesListState extends State<ArchivesList> {
             );
           }
 
-          // Si l'utilisateur est connecté, récupérez les sessions
           return FutureBuilder<List<Map<String, dynamic>>>(
             future: sessionRepository.getAllSessionsByUserID(),
             builder: (context, snapshot) {
@@ -82,15 +87,49 @@ class _ArchivesListState extends State<ArchivesList> {
                 return const Center(child: Text('Aucune session trouvée.'));
               }
 
-              // Affiche la liste des sessions
               List<Map<String, dynamic>> sessions = snapshot.data!;
               return ListView.builder(
                 itemCount: sessions.length,
                 itemBuilder: (context, index) {
                   final session = sessions[index];
-                  return ListTile(
-                    title: Text('Session ${session['sessionCount']}'),
-                    subtitle: Text('Durée : ${session['workDuration']} minutes'),
+                  return Card(
+                    child: Container(
+                      margin: const EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                'Date : ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                formatTimestamp(session['date']),
+                                style: const TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(children: [
+                            const Text(
+                              'Session(s) : ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text('${session['sessionCount']}'),
+                          ],),
+                          const SizedBox(height: 4),
+                          Row(children: [
+                            const Text(
+                              'Durée : ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text('${session['workDuration']} minutes'),
+                          ],)
+                        ],
+                      ),
+                    ),
                   );
                 },
               );

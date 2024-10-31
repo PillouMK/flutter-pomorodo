@@ -41,12 +41,14 @@ dependencies:
   google_sign_in: ^6.2.1
   firebase_storage: ^12.3.4
   cloud_firestore: ^5.4.4
+  intl: ^0.19.0
   uuid: ^4.4.2
   flutter_local_notifications: ^17.2.4
   flutter_launcher_icons: ^0.14.1
   flutter_native_splash: ^2.4.2
   permission_handler: ^11.3.1
   timezone: ^0.9.4
+
 
 dev_dependencies:
   flutter_test:
