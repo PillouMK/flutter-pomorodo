@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 class SessionRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -28,6 +29,27 @@ class SessionRepository {
     } catch (e) {
       print("Erreur lors de la récupération de la session : $e");
       return null;
+    }
+  }
+
+  Future<void> addSession({
+    required DateTime date,
+    required int sessionCount,
+    required int workDuration,
+  }) async {
+    try {
+      final userID = FirebaseAuth.instance.currentUser?.uid;
+      final uuid = const Uuid().v4(); // Génère un UUID pour la session
+      await _firestore.collection('sessions').doc(uuid).set({
+        'uuid': uuid,
+        'userUUID': userID,
+        'date': date,
+        'sessionCount': sessionCount,
+        'workDuration': workDuration,
+      });
+      print("Session ajoutée avec succès !");
+    } catch (e) {
+      print("Erreur lors de l'ajout de la session : $e");
     }
   }
 }

@@ -1,19 +1,29 @@
+import 'package:flutter_pomodoro/cubit/timer_cubit.dart';
+
 class TimerState {
-  TimerState.start({required this.workMinutes, required this.restMinutes})
-      : startedAt = DateTime.now(),
-        pausedAt = null;
+  TimerState.start({
+    required this.workMinutes,
+    required this.restMinutes,
+  })  : startedAt = DateTime.now(),
+        pausedAt = null,
+        sessionCount = 1,
+        totalWorkDuration = 0;
 
   TimerState._({
     required this.startedAt,
     required this.pausedAt,
     required this.workMinutes,
-    required this.restMinutes
+    required this.restMinutes,
+    required this.sessionCount,
+    required this.totalWorkDuration,
   });
 
   final DateTime startedAt;
   final DateTime? pausedAt;
   final int workMinutes;
   final int restMinutes;
+  final int sessionCount; // Nombre de sessions commencées
+  int totalWorkDuration; // Durée totale de travail en minutes
 
   TimerState start() {
     return TimerState._(
@@ -21,6 +31,8 @@ class TimerState {
       pausedAt: null,
       workMinutes: workMinutes,
       restMinutes: restMinutes,
+      sessionCount: 1,
+      totalWorkDuration: 0
     );
   }
 
@@ -30,6 +42,8 @@ class TimerState {
       pausedAt: DateTime.now(),
       workMinutes: workMinutes,
       restMinutes: restMinutes,
+      sessionCount: sessionCount,
+      totalWorkDuration: totalWorkDuration,
     );
   }
 
@@ -41,6 +55,8 @@ class TimerState {
           pausedAt: null,
           workMinutes: workMinutes,
           restMinutes: restMinutes,
+          sessionCount: sessionCount,
+          totalWorkDuration: totalWorkDuration,
           );
   }
 

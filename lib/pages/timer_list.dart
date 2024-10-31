@@ -40,12 +40,12 @@ class _TimerListState extends State<TimerList> {
               )
             }, child: const Text("25/5")),
             ElevatedButton(onPressed: () => {
-              setTimerCubit(2, 1),
+              setTimerCubit(1, 1),
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const TimerPage()),
               )
-            }, child: const Text("2/1")),
+            }, child: const Text("1/1")),
           ],
         )
     );
