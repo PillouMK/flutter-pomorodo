@@ -1,16 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_pomodoro/pages/archives_list.dart';
-import 'package:flutter_pomodoro/pages/timer.page.dart';
 import 'package:flutter_pomodoro/pages/timer_list.dart';
-import 'package:flutter_pomodoro/repository/sessions_repository.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'authentification/auth_service.dart';
 import 'cubit/timer_cubit.dart';

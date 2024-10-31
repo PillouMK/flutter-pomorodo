@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_pomodoro/main.dart';
 import '../model/timer.class.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 
@@ -26,10 +24,10 @@ class TimerCubit extends Cubit<TimerState?> {
     emit(state?.resumed());
     if (state != null) {
       TimerState currentState = state!;
-      int nextStepIn = state!.nextStepIn.inMinutes;
+      int nextStepIn = state!.nextStepIn.inSeconds;
       for (var i = 0; i < 30; i++) {
         tz.TZDateTime scheduledTimeBreak = tz.TZDateTime.now(tz.local).add(Duration(seconds: currentState.working
-                ? nextStepIn + Duration(minutes: currentState.restMinutes).inMinutes
+                ? nextStepIn + Duration(seconds: currentState.restMinutes).inSeconds
                 : nextStepIn));
 
         scheduleNotification(i,"Pomodoro Timer",
@@ -37,7 +35,7 @@ class TimerCubit extends Cubit<TimerState?> {
           scheduledTimeBreak);
 
         tz.TZDateTime scheduledTimeWork = tz.TZDateTime.now(tz.local).add(Duration(seconds: currentState.working
-                ? nextStepIn + Duration(minutes: currentState.workMinutes).inMinutes
+                ? nextStepIn + Duration(seconds: currentState.workMinutes).inSeconds
                 : nextStepIn));
 
         scheduleNotification(i+1,"Pomodoro Timer",

@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pomodoro/pages/timer.page.dart';
 
 import '../authentification/auth_service.dart';
 import '../cubit/timer_cubit.dart';
-import '../repository/sessions_repository.dart';
 
 class TimerList extends StatefulWidget {
   const TimerList({super.key});

@@ -1,4 +1,3 @@
-import 'package:flutter_pomodoro/cubit/timer_cubit.dart';
 
 class TimerState {
   TimerState.start({

@@ -122,16 +122,6 @@ class _TimerPageState extends State<TimerPage> {
 
       nextStepIn = nextStepIn + currentState.workMinutes + currentState.restMinutes;
     }
-    
-    // const AndroidNotificationDetails androidNotificationDetails =
-    //     AndroidNotificationDetails(
-    //         'repeating channel id', 'repeating channel name',
-    //         channelDescription: 'repeating description');
-    // const NotificationDetails notificationDetails =
-    //     NotificationDetails(android: androidNotificationDetails);
-    // flutterLocalNotificationsPlugin.periodicallyShow(0, 'repeating title',
-    //     'repeating body', RepeatInterval.everyMinute, notificationDetails,
-    //   androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle);
   }
 
 
