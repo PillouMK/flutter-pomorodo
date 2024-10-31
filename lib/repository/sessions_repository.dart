@@ -10,7 +10,9 @@ class SessionRepository {
     try {
       CollectionReference sessions = _firestore.collection('sessions');
       final userID = FirebaseAuth.instance.currentUser?.uid;
-      QuerySnapshot querySnapshot = await sessions.where('userUUID', isEqualTo: userID).get();
+      QuerySnapshot querySnapshot = await sessions.where('userUUID', isEqualTo: userID)
+                                    .orderBy('date', descending: true)
+                                    .get();
 
       return querySnapshot.docs.map((doc) {
         print('doc.data()');

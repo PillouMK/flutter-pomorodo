@@ -1,0 +1,5 @@
+flutter_native_splash:
+  color: "#ffffff"  # Couleur d'arrière-plan du splash screen
+  image: assets/images/splash.png  # Chemin vers votre image de splash
+  android: true
+  ios: true

@@ -1,8 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_pomodoro/main.dart';
 import 'package:flutter_pomodoro/repository/sessions_repository.dart';
 import 'package:flutter_pomodoro/widgets/pomodoro.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import '../cubit/timer_cubit.dart';
 
@@ -14,26 +18,6 @@ class TimerPage extends StatefulWidget {
 }
 
 class _TimerPageState extends State<TimerPage> {
-
-
-  // void resetTimer() {
-  //   TimerCubit.instance.state!.resumed();
-  // }
-
-  // void resetTimer() {
-  //   final currentState = TimerCubit.instance.state!;
-  
-  //   if (currentState.timeElapsed.inSeconds > 0) {
-  //     final sessionRepository = SessionRepository();
-  //     sessionRepository.addSession(
-  //       date: currentState.startedAt,
-  //       sessionCount: currentState.sessionCount,
-  //       workDuration: currentState.totalWorkDuration + (currentState.working ? currentState.timeElapsed.inSeconds : 0),
-  //     );
-  //   }
-
-  //   TimerCubit.instance.setStop();
-  // }
 
   void resetTimer() {
     final currentState = TimerCubit.instance.state!;
@@ -86,6 +70,70 @@ class _TimerPageState extends State<TimerPage> {
       TimerCubit.instance.setPause();
     }
   }
+
+  Future<void> scheduleNotification(int id, String title, String body, tz.TZDateTime scheduledTime) async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id, // ID de notification (à incrémenter si plusieurs notifs en parallèle)
+      title,
+      body,
+      scheduledTime,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'pomodoro-timer', // Assure-toi que l'ID du channel est bien défini
+          'Pomodoro Timer',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Europe/Paris'));
+
+    final currentState = TimerCubit.instance.state!;
+    final workSeconds = currentState.workMinutes * 60;
+    final restSeconds = currentState.restMinutes * 60;
+
+    int nextStepIn = currentState.nextStepIn.inMinutes;
+    for (var i = 0; i < 30; i++) {
+      tz.TZDateTime scheduledTimeBreak = tz.TZDateTime.now(tz.local).add(Duration(minutes: currentState.working
+              ? nextStepIn + Duration(minutes: currentState.restMinutes).inMinutes
+              : nextStepIn));
+
+      scheduleNotification(i,"Pomodoro Timer",
+        "Session de travail terminée ! C'est l'heure de la pause.",
+        scheduledTimeBreak);
+
+      tz.TZDateTime scheduledTimeWork = tz.TZDateTime.now(tz.local).add(Duration(minutes: currentState.working
+              ? nextStepIn + Duration(minutes: currentState.workMinutes).inMinutes
+              : nextStepIn));
+
+      scheduleNotification(i+1,"Pomodoro Timer",
+        "Pause terminée ! Il est temps de retourner au travail.",
+        scheduledTimeWork);
+
+      nextStepIn = nextStepIn + currentState.workMinutes + currentState.restMinutes;
+    }
+    
+    // const AndroidNotificationDetails androidNotificationDetails =
+    //     AndroidNotificationDetails(
+    //         'repeating channel id', 'repeating channel name',
+    //         channelDescription: 'repeating description');
+    // const NotificationDetails notificationDetails =
+    //     NotificationDetails(android: androidNotificationDetails);
+    // flutterLocalNotificationsPlugin.periodicallyShow(0, 'repeating title',
+    //     'repeating body', RepeatInterval.everyMinute, notificationDetails,
+    //   androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle);
+  }
+
 
   @override
   Widget build(BuildContext context) {
